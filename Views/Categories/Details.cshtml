@@ -1,0 +1,79 @@
+@model AzureLearningDocker.Models.Category
+
+@{
+    ViewData["Title"] = "Category Details";
+}
+
+<div class="container mt-5">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1>@Model.Name</h1>
+            <p class="lead text-muted">@Model.Description</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+                <i class="bi bi-pencil"></i> Edit
+            </a>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Back
+            </a>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="row">
+        <div class="col-md-12">
+            <h3>Chapters (Day-wise)</h3>
+            @if (Model.Chapters.Count == 0)
+            {
+                <div class="alert alert-info">
+                    No chapters yet. <a asp-controller="Chapters" asp-action="Create" asp-route-categoryId="@Model.Id">Create one</a>.
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Day</th>
+                                <th>Title</th>
+                                <th>Topics</th>
+                                <th>Q&A</th>
+                                <th>PDFs</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var chapter in Model.Chapters.OrderBy(c => c.DayNumber))
+                            {
+                                <tr>
+                                    <td><strong>Day @chapter.DayNumber</strong></td>
+                                    <td>@chapter.Title</td>
+                                    <td><span class="badge bg-info">@chapter.Topics.Count</span></td>
+                                    <td><span class="badge bg-warning text-dark">@chapter.QuestionAnswers.Count</span></td>
+                                    <td><span class="badge bg-success">@chapter.PdfAttachments.Count</span></td>
+                                    <td>
+                                        <a asp-controller="Chapters" asp-action="Details" asp-route-id="@chapter.Id" class="btn btn-sm btn-info">
+                                            <i class="bi bi-eye"></i> View
+                                        </a>
+                                        <a asp-controller="Chapters" asp-action="Edit" asp-route-id="@chapter.Id" class="btn btn-sm btn-warning">
+                                            <i class="bi bi-pencil"></i> Edit
+                                        </a>
+                                        <a asp-controller="Chapters" asp-action="Delete" asp-route-id="@chapter.Id" class="btn btn-sm btn-danger">
+                                            <i class="bi bi-trash"></i> Delete
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <a asp-controller="Chapters" asp-action="Create" asp-route-categoryId="@Model.Id" class="btn btn-primary mt-3">
+                    <i class="bi bi-plus-circle"></i> Add New Chapter
+                </a>
+            }
+        </div>
+    </div>
+</div>

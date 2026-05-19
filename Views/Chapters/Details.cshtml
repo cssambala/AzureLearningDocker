@@ -1,0 +1,152 @@
+@model AzureLearningDocker.Models.Chapter
+
+@{
+    ViewData["Title"] = "Chapter Details";
+}
+
+<div class="container mt-5">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1>Day @Model.DayNumber - @Model.Title</h1>
+            <p class="lead text-muted">Category: <strong>@Model.Category?.Name</strong></p>
+            <p>@Model.Description</p>
+        </div>
+        <div class="col-md-4 text-end">
+            <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">
+                <i class="bi bi-pencil"></i> Edit
+            </a>
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="bi bi-arrow-left"></i> Back
+            </a>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Topics Section -->
+            <div class="mb-5">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3><i class="bi bi-book"></i> Topics</h3>
+                    <a asp-controller="Topics" asp-action="Create" asp-route-chapterId="@Model.Id" class="btn btn-sm btn-primary">
+                        <i class="bi bi-plus-circle"></i> Add Topic
+                    </a>
+                </div>
+
+                @if (Model.Topics.Count == 0)
+                {
+                    <div class="alert alert-info">
+                        No topics yet. <a asp-controller="Topics" asp-action="Create" asp-route-chapterId="@Model.Id">Add one</a>.
+                    </div>
+                }
+                else
+                {
+                    <div class="list-group">
+                        @foreach (var topic in Model.Topics.OrderBy(t => t.SequenceNumber))
+                        {
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">@topic.Title</h5>
+                                    <small>@topic.CreatedDate.ToShortDateString()</small>
+                                </div>
+                                <p class="mb-1">@Html.Raw(System.Web.HttpUtility.HtmlEncode(topic.Content).Substring(0, Math.Min(150, System.Web.HttpUtility.HtmlEncode(topic.Content).Length)))...</p>
+                                <div class="btn-group btn-group-sm float-end" role="group">
+                                    <a asp-controller="Topics" asp-action="Details" asp-route-id="@topic.Id" class="btn btn-info">View</a>
+                                    <a asp-controller="Topics" asp-action="Edit" asp-route-id="@topic.Id" class="btn btn-warning">Edit</a>
+                                    <a asp-controller="Topics" asp-action="Delete" asp-route-id="@topic.Id" class="btn btn-danger">Delete</a>
+                                </div>
+                            </a>
+                        }
+                    </div>
+                }
+            </div>
+
+            <!-- Question & Answers Section -->
+            <div class="mb-5">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3><i class="bi bi-question-circle"></i> Question & Answers</h3>
+                    <a asp-controller="QuestionAnswers" asp-action="Create" asp-route-chapterId="@Model.Id" class="btn btn-sm btn-primary">
+                        <i class="bi bi-plus-circle"></i> Add Q&A
+                    </a>
+                </div>
+
+                @if (Model.QuestionAnswers.Count == 0)
+                {
+                    <div class="alert alert-info">
+                        No Q&A yet. <a asp-controller="QuestionAnswers" asp-action="Create" asp-route-chapterId="@Model.Id">Add one</a>.
+                    </div>
+                }
+                else
+                {
+                    <div class="accordion" id="qaAccordion">
+                        @{
+                            int qaIndex = 0;
+                        }
+                        @foreach (var qa in Model.QuestionAnswers.OrderBy(q => q.SequenceNumber))
+                        {
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="qaHeading@qaIndex">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#qaCollapse@qaIndex" aria-expanded="false" aria-controls="qaCollapse@qaIndex">
+                                        <strong>Q@(qaIndex + 1):</strong> @qa.Question
+                                    </button>
+                                </h2>
+                                <div id="qaCollapse@qaIndex" class="accordion-collapse collapse" aria-labelledby="qaHeading@qaIndex" data-bs-parent="#qaAccordion">
+                                    <div class="accordion-body">
+                                        <p>@qa.Answer</p>
+                                        <div class="btn-group btn-group-sm" role="group">
+                                            <a asp-controller="QuestionAnswers" asp-action="Edit" asp-route-id="@qa.Id" class="btn btn-warning">Edit</a>
+                                            <a asp-controller="QuestionAnswers" asp-action="Delete" asp-route-id="@qa.Id" class="btn btn-danger">Delete</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            qaIndex++;
+                        }
+                    </div>
+                }
+            </div>
+
+            <!-- PDF Attachments Section -->
+            <div class="mb-5">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3><i class="bi bi-file-pdf"></i> PDF Resources</h3>
+                    <a asp-controller="PdfAttachments" asp-action="Create" asp-route-chapterId="@Model.Id" class="btn btn-sm btn-primary">
+                        <i class="bi bi-plus-circle"></i> Add PDF
+                    </a>
+                </div>
+
+                @if (Model.PdfAttachments.Count == 0)
+                {
+                    <div class="alert alert-info">
+                        No PDFs yet. <a asp-controller="PdfAttachments" asp-action="Create" asp-route-chapterId="@Model.Id">Upload one</a>.
+                    </div>
+                }
+                else
+                {
+                    <div class="list-group">
+                        @foreach (var pdf in Model.PdfAttachments)
+                        {
+                            <div class="list-group-item">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h5 class="mb-1"><i class="bi bi-file-pdf text-danger"></i> @pdf.FileName</h5>
+                                        <p class="mb-1 text-muted">Size: @(pdf.FileSizeInBytes / 1024.0).ToString("F2") KB</p>
+                                    </div>
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <a href="@pdf.FileUrl" class="btn btn-success" target="_blank">
+                                            <i class="bi bi-download"></i> Download
+                                        </a>
+                                        <a asp-controller="PdfAttachments" asp-action="Delete" asp-route-id="@pdf.Id" class="btn btn-danger">
+                                            <i class="bi bi-trash"></i> Delete
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

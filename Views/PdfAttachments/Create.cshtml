@@ -1,0 +1,55 @@
+@{
+    ViewData["Title"] = "Upload PDF";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h1>Upload PDF Resource</h1>
+            <hr />
+
+            <form asp-action="Create" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                <div class="mb-3">
+                    <label for="file" class="form-label">Select PDF File</label>
+                    <input type="file" class="form-control" id="file" name="file" accept=".pdf" required />
+                    <small class="form-text text-muted">Maximum file size: 10MB</small>
+                    <span class="text-danger">@ViewBag.ErrorMessage</span>
+                </div>
+
+                <div class="alert alert-info" role="alert">
+                    <strong>Note:</strong> Only PDF files are allowed. Make sure you have the correct chapter selected.
+                </div>
+
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-cloud-upload"></i> Upload
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="bi bi-x-circle"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        document.getElementById('file').addEventListener('change', function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                if (file.size > 10 * 1024 * 1024) {
+                    alert('File size exceeds 10MB limit');
+                    e.target.value = '';
+                }
+                if (!file.type.includes('pdf')) {
+                    alert('Only PDF files are allowed');
+                    e.target.value = '';
+                }
+            }
+        });
+    </script>
+}

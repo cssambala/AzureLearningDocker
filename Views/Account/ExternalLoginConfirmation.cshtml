@@ -1,0 +1,76 @@
+@model ExternalLoginConfirmationViewModel
+
+@{
+    ViewData["Title"] = "Confirm External Login";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+            <div class="card shadow-lg">
+                <div class="card-body p-5">
+                    <h2 class="mb-4 text-center">
+                        <i class="bi bi-check-circle"></i> Complete Your Profile
+                    </h2>
+
+                    <form asp-action="ExternalLoginConfirmation" method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                        <p class="text-muted mb-4">Please complete the information below to finish your registration:</p>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="FirstName" class="form-label">First Name</label>
+                                <input asp-for="FirstName" class="form-control form-control-lg" />
+                                <span asp-validation-for="FirstName" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="LastName" class="form-label">Last Name</label>
+                                <input asp-for="LastName" class="form-control form-control-lg" />
+                                <span asp-validation-for="LastName" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label">Email Address</label>
+                            <input asp-for="Email" type="email" class="form-control form-control-lg" readonly />
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-lg w-100">
+                            <i class="bi bi-check-circle"></i> Complete Registration
+                        </button>
+                    </form>
+
+                    <hr class="my-4" />
+
+                    <p class="text-center text-muted small">
+                        <a href="javascript:history.back()" class="text-decoration-none">Go back</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<style>
+    .card {
+        border: none;
+        border-radius: 10px;
+    }
+
+    .form-control-lg {
+        border-radius: 8px;
+        padding: 12px 15px;
+    }
+
+    .btn-lg {
+        border-radius: 8px;
+        padding: 12px 15px;
+        font-weight: 600;
+    }
+</style>

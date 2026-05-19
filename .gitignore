@@ -1,0 +1,31 @@
+﻿# Build folders
+bin/
+obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Rider / VS Code
+.idea/
+.vscode/
+
+# Logs
+*.log
+
+# Docker
+DockerData/
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Environment / secrets
+.env
+
+# Publish folders
+publish/
+
+# Node modules (if later added)
+node_modules/

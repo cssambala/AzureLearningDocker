@@ -1,0 +1,57 @@
+@model AzureLearningDocker.Models.Topic
+
+@{
+    ViewData["Title"] = "Create Topic";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <h1>Create New Topic</h1>
+            <hr />
+
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                <div class="mb-3">
+                    <label asp-for="ChapterId" class="form-label"></label>
+                    <select asp-for="ChapterId" asp-items="ViewBag.ChapterId" class="form-select">
+                        <option value="">-- Select a Chapter --</option>
+                    </select>
+                    <span asp-validation-for="ChapterId" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="SequenceNumber" class="form-label"></label>
+                    <input asp-for="SequenceNumber" class="form-control" type="number" />
+                    <span asp-validation-for="SequenceNumber" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Title" class="form-label"></label>
+                    <input asp-for="Title" class="form-control" />
+                    <span asp-validation-for="Title" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="Content" class="form-label"></label>
+                    <textarea asp-for="Content" class="form-control" rows="6"></textarea>
+                    <span asp-validation-for="Content" class="text-danger"></span>
+                </div>
+
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="bi bi-check-circle"></i> Create
+                    </button>
+                    <a asp-action="Index" class="btn btn-secondary">
+                        <i class="bi bi-x-circle"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

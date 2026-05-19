@@ -1,0 +1,46 @@
+@model IEnumerable<AzureLearningDocker.Models.Topic>
+
+@{
+    ViewData["Title"] = "Topics";
+}
+
+<div class="container mt-5">
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1>Topics</h1>
+        </div>
+        <div class="col-md-4 text-end">
+            <a asp-action="Create" class="btn btn-primary">
+                <i class="bi bi-plus-circle"></i> Create New Topic
+            </a>
+        </div>
+    </div>
+
+    @if (Model.Count() == 0)
+    {
+        <div class="alert alert-info">
+            No topics found. <a asp-action="Create">Create one</a> to get started.
+        </div>
+    }
+    else
+    {
+        <div class="list-group">
+            @foreach (var topic in Model)
+            {
+                <a href="#" class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">@topic.Title</h5>
+                        <small>@topic.CreatedDate.ToShortDateString()</small>
+                    </div>
+                    <p class="mb-1">@Html.Raw(System.Web.HttpUtility.HtmlEncode(topic.Content).Substring(0, Math.Min(200, System.Web.HttpUtility.HtmlEncode(topic.Content).Length)))...</p>
+                    <small>Chapter: @topic.Chapter?.Title</small>
+                    <div class="btn-group btn-group-sm float-end" role="group">
+                        <a asp-action="Details" asp-route-id="@topic.Id" class="btn btn-info">View</a>
+                        <a asp-action="Edit" asp-route-id="@topic.Id" class="btn btn-warning">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@topic.Id" class="btn btn-danger">Delete</a>
+                    </div>
+                </a>
+            }
+        </div>
+    }
+</div>
