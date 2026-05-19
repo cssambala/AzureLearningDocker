@@ -42,7 +42,7 @@ builder.Services.AddAuthentication(options =>
 .AddGoogle(googleOptions =>
 {
     googleOptions.ClientId = builder.Configuration["Authentication:Google:ClientId"] ?? "ClientId";
-    googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"] ?? "ClientSecret";
+    googleOptions.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"] ?? "ClientSecretChanged";
 });
 
 // Add Authorization
