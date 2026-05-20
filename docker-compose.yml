@@ -1,21 +1,21 @@
-﻿version: '3.8'
+﻿#version: '3.8'
 
 services:
 
-  sqlserver:
-    image: mcr.microsoft.com/mssql/server:2022-latest
+  #sqlserver:
+  #  image: mcr.microsoft.com/mssql/server:2022-latest
 
-    container_name: sqlservercontainer
+  #  container_name: sqlservercontainer
 
-    environment:
-      - ACCEPT_EULA=Y
-      - SA_PASSWORD=YourStrong@Password123
+  #  environment:
+  #    - ACCEPT_EULA=Y
+  #    - SA_PASSWORD=YourStrong@Password123
 
-    ports:
-      - "1433:1433"
+  #  ports:
+  #    - "1433:1433"
 
-    volumes:
-      - sql_data:/var/opt/mssql
+  #  volumes:
+  #    - sql_data:/var/opt/mssql
 
   webapp:
     build:
@@ -26,9 +26,11 @@ services:
 
     ports:
       - "8080:8080"
+    environment:
+       ConnectionStrings__DefaultConnection: 'Server=tcp:cssambalasql.database.windows.net,1433;Initial Catalog=AzureLearningDb;Persist Security Info=False;User ID=sqladmin;Password=YourStrong@Password123;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;'
 
-    depends_on:
-      - sqlserver
+  #  depends_on:
+  #    - sqlserver
 
-volumes:
-  sql_data:
+#volumes:
+#  sql_data:
