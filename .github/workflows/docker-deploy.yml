@@ -37,6 +37,7 @@ jobs:
 
       - name: Restart Azure Container App
         run: |
-          az containerapp revision restart \
-            --name azurelearningapp \
-            --resource-group AzureLearningRG
+          az containerapp update \
+            --name azurelearningcontainerapp \
+            --resource-group AzureLearningRG \
+            --image cssambala/azurelearningdocker:latest
