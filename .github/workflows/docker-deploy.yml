@@ -24,7 +24,7 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build -t cssambala/azurelearningdocker:latest .
+          docker build --no-cache -t cssambala/azurelearningdocker:latest .
 
       - name: Push Docker Image
         run: |
