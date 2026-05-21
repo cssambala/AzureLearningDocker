@@ -112,18 +112,18 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
-
-//app.UseHttpsRedirection();
-app.UseStaticFiles();
-
-app.UseRouting();
-
-
 app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
     ForwardedHeaders = ForwardedHeaders.XForwardedFor |
                        ForwardedHeaders.XForwardedProto
 });
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+
+app.UseRouting();
+
+
+
 // Add Authentication and Authorization middleware
 app.UseAuthentication();
 app.UseAuthorization();
