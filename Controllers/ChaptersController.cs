@@ -1,5 +1,6 @@
 using AzureLearningDocker.Data;
 using AzureLearningDocker.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -33,6 +34,7 @@ namespace AzureLearningDocker.Controllers
         }
 
         // GET: Chapters/Details/5
+        [Authorize]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -65,6 +67,7 @@ namespace AzureLearningDocker.Controllers
         // POST: Chapters/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Create([Bind("CategoryId,Title,Description,DayNumber")] Chapter chapter)
         {
             if (ModelState.IsValid)
