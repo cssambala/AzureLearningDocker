@@ -130,12 +130,7 @@ namespace AzureLearningDocker.Controllers
         [AllowAnonymous]
         public IActionResult ExternalLogin(string provider, string? returnUrl = null)
         {
-            //var redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl });
-            var redirectUrl = Url.Action(
-    "ExternalLoginCallback",
-    "Account",
-    new { ReturnUrl = returnUrl },
-    protocol: "https");
+            var redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl });
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
             return new ChallengeResult(provider, properties);
         }
