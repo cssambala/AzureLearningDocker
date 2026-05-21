@@ -1,5 +1,4 @@
 using AzureLearningDocker.Data;
-using AzureLearningDocker.Data;
 using AzureLearningDocker.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

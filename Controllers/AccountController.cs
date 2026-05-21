@@ -126,8 +126,9 @@ namespace AzureLearningDocker.Controllers
         }
 
         // GET: Account/ExternalLogin
-        [HttpGet]
+        [HttpPost]
         [AllowAnonymous]
+        [ValidateAntiForgeryToken]  
         public IActionResult ExternalLogin(string provider, string? returnUrl = null)
         {
             var redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl });
@@ -166,7 +167,7 @@ namespace AzureLearningDocker.Controllers
             }
 
             // Store the information about the login provider for authenticating back later.
-            HttpContext.Session.SetString("LoginProvider", info.LoginProvider);
+            //HttpContext.Session.SetString("LoginProvider", info.LoginProvider);
 
             var email = info.Principal?.FindFirstValue(ClaimTypes.Email) ?? string.Empty;
             var firstName = info.Principal?.FindFirstValue(ClaimTypes.GivenName) ?? string.Empty;
