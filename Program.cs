@@ -115,7 +115,11 @@ if (!app.Environment.IsDevelopment())
 app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
     ForwardedHeaders = ForwardedHeaders.XForwardedFor |
-                       ForwardedHeaders.XForwardedProto
+                       ForwardedHeaders.XForwardedProto,
+
+    // IMPORTANT
+    KnownNetworks = { },
+    KnownProxies = { }
 });
 app.UseHttpsRedirection();
 app.UseStaticFiles();
