@@ -128,7 +128,6 @@ namespace AzureLearningDocker.Controllers
         // GET: Account/ExternalLogin
         [HttpPost]
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]  
         public IActionResult ExternalLogin(string provider, string? returnUrl = null)
         {
             //var redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl });
