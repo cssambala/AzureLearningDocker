@@ -2,7 +2,7 @@ using AzureLearningDocker.Data;
 using AzureLearningDocker.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-
+using Microsoft.AspNetCore.HttpOverrides;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -118,6 +118,12 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor |
+                       ForwardedHeaders.XForwardedProto
+});
 // Add Authentication and Authorization middleware
 app.UseAuthentication();
 app.UseAuthorization();
