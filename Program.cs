@@ -12,7 +12,13 @@ builder.Services.AddControllersWithViews();
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
     ?? "Server=(localdb)\\mssqllocaldb;Database=AzureLearningDb;Trusted_Connection=true;";
 builder.Services.AddDbContext<LearningContext>(options =>
-    options.UseSqlServer(connectionString));
+    options.UseSqlServer(connectionString, sqlOptions =>
+    {
+        sqlOptions.EnableRetryOnFailure(
+            maxRetryCount: 5,
+            maxRetryDelay: TimeSpan.FromSeconds(30),
+            errorNumbersToAdd: null);
+    }));
 
 // Add ASP.NET Core Identity
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
@@ -60,52 +66,59 @@ builder.Services.AddAuthorization(options =>
 
 var app = builder.Build();
 
-// Create roles and seed data
-using (var scope = app.Services.CreateScope())
+try
 {
-    var services = scope.ServiceProvider;
-    var context = services.GetRequiredService<LearningContext>();
-    var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-    var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-
-     //Create database
-    context.Database.Migrate();
-
-    // Create roles
-    string[] roles = { "Admin", "Teacher", "Student" };
-    foreach (var role in roles)
+    // Create roles and seed data
+    using (var scope = app.Services.CreateScope())
     {
-        if (!await roleManager.RoleExistsAsync(role))
-        {
-            await roleManager.CreateAsync(new IdentityRole(role));
-        }
-    }
+        var services = scope.ServiceProvider;
+        var context = services.GetRequiredService<LearningContext>();
+        var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
+        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
-    // Create default admin user
-    var adminEmail = "admin@learning.com";
-    var adminUser = await userManager.FindByEmailAsync(adminEmail);
-    if (adminUser == null)
-    {
-        adminUser = new ApplicationUser
-        {
-            UserName = adminEmail,
-            Email = adminEmail,
-            FirstName = "Admin",
-            LastName = "User",
-            EmailConfirmed = true,
-            IsActive = true
-        };
-        var result = await userManager.CreateAsync(adminUser, "Admin@123");
-        if (result.Succeeded)
-        {
-            await userManager.AddToRoleAsync(adminUser, "Admin");
-        }
-    }
+        //Create database
+        context.Database.Migrate();
 
-    // Uncomment the line below to seed sample data on first run
-    // DbInitializer.Initialize(context);
+        // Create roles
+        string[] roles = { "Admin", "Teacher", "Student" };
+        foreach (var role in roles)
+        {
+            if (!await roleManager.RoleExistsAsync(role))
+            {
+                await roleManager.CreateAsync(new IdentityRole(role));
+            }
+        }
+
+        // Create default admin user
+        var adminEmail = "admin@learning.com";
+        var adminUser = await userManager.FindByEmailAsync(adminEmail);
+        if (adminUser == null)
+        {
+            adminUser = new ApplicationUser
+            {
+                UserName = adminEmail,
+                Email = adminEmail,
+                FirstName = "Admin",
+                LastName = "User",
+                EmailConfirmed = true,
+                IsActive = true
+            };
+            var result = await userManager.CreateAsync(adminUser, "Admin@123");
+            if (result.Succeeded)
+            {
+                await userManager.AddToRoleAsync(adminUser, "Admin");
+            }
+        }
+
+        // Uncomment the line below to seed sample data on first run
+        // DbInitializer.Initialize(context);
+    }
 }
-
+catch (Exception ex)
+{
+    Console.WriteLine("Database unavailable during startup.");
+    Console.WriteLine(ex.Message);
+}
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
