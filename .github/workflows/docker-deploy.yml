@@ -24,11 +24,13 @@ jobs:
 
       - name: Build Docker Image
         run: |
-          docker build --no-cache -t cssambala/azurelearningdocker:${{ github.run_number }} .
+          docker build --no-cache -t cssambala/azurelearningdocker:${{ github.run_number }} \
+          -t cssambala/azurelearningdocker:latest .
 
       - name: Push Docker Image
         run: |
           docker push cssambala/azurelearningdocker:${{ github.run_number }}
+          docker push cssambala/azurelearningdocker:latest
 
       - name: Azure Login
         uses: azure/login@v2
